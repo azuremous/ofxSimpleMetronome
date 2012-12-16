@@ -1,9 +1,9 @@
 //
 //  ofxSimpleMetronome.h
-//  emptyExample
+//  ofxSimpleMetronome
 //
-//  Created by 정운 김 on 4/25/12.
-//  Copyright (c) 2012 pinkroad.co.cc. All rights reserved.
+//  Created by kim jung un a.k.a azuremous on 4/25/12.
+//  Copyright (c) 2012 azuremous.net All rights reserved.
 //
 
 #ifndef emptyExample_ofxSimpleMetronome_h
