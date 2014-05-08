@@ -9,11 +9,11 @@
 
 
 //--------------------------------------------------------------
-/*public */ofxMetronome::ofxMetronome()
+/*public */ofxSimpleMetronome::ofxSimpleMetronome()
 :bangColor(255,255,0)
 ,grayColor(90)
 ,bang(false)
-,startMetro(false)
+,lastBang(false)
 ,appear(true)
 {
     leftCircleColor = bangColor;
@@ -21,37 +21,43 @@
 }
 
 //--------------------------------------------------------------
-/*public */ofxMetronome::~ofxMetronome(){}
+/*public */ofxSimpleMetronome::~ofxSimpleMetronome(){}
 
 //--------------------------------------------------------------
-/*public */void ofxMetronome::setup(int bpm, float x, float y){
+/*public */void ofxSimpleMetronome::setup(int bpm, float x, float y){
     
     setTempo(bpm);
     millis = ofGetElapsedTimeMillis();
     posRect.set(x, y, 0, 0);
     
-    ofAddListener(ofEvents().update, this, &ofxMetronome::update);
-    ofAddListener(ofEvents().draw, this, &ofxMetronome::render);
-    
+    ofAddListener(ofEvents().draw, this, &ofxSimpleMetronome::render);
 }
 
 //--------------------------------------------------------------
-/*public */void ofxMetronome::update(ofEventArgs &event){
+/*public */void ofxSimpleMetronome::threadedFunction(){
     
-    if (startMetro) {
-        checkBang();
-        if (bang) {
-            leftCircleColor = bangColor;
-            rightCircleColor = grayColor;
-        }else{
-            leftCircleColor = grayColor;
-            rightCircleColor = bangColor;
+    while (isThreadRunning() != 0) {
+        if (lock()) {
+            checkBang();
+            if(bang != lastBang){
+                lastBang = !lastBang;
+                ofNotifyEvent(bangAlert, lastBang, this);
+            }
+            
+            if (bang) {
+                leftCircleColor = bangColor;
+                rightCircleColor = grayColor;
+            }else{
+                leftCircleColor = grayColor;
+                rightCircleColor = bangColor;
+            }
+            unlock();
         }
     }
 }
 
 //--------------------------------------------------------------
-/*public */void ofxMetronome::render(ofEventArgs &event){
+/*public */void ofxSimpleMetronome::render(ofEventArgs &event){
     if (appear) {
         ofPushMatrix();
         ofTranslate(posRect.x, posRect.y);
@@ -65,7 +71,7 @@
 }
 
 //--------------------------------------------------------------
-/*protected */bool ofxMetronome::checkBang(){
+/*protected */bool ofxSimpleMetronome::checkBang(){
     
     if (fabs(ofGetElapsedTimeMillis() - millis) >= speed) {
         

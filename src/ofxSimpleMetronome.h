@@ -9,7 +9,7 @@
 
 #include "ofMain.h"
 
-class ofxMetronome {
+class ofxSimpleMetronome: public ofThread {
     
 private:
     
@@ -22,7 +22,7 @@ private:
     int millis;
     
     bool bang;
-    bool startMetro;
+    bool lastBang;
     bool appear;
     ofRectangle posRect;
     
@@ -31,17 +31,17 @@ protected:
     bool checkBang();
     
 public:
-    
-    explicit ofxMetronome();
-    virtual~ofxMetronome();
+    ofEvent<bool> bangAlert;
+    explicit ofxSimpleMetronome();
+    virtual~ofxSimpleMetronome();
     void setup(int bpm , float x, float y);
-    void start(){ startMetro = true; }
-    void stop(){ startMetro = false; }
+    void start(bool _verbose = false){ startThread(true, _verbose); }
+    void stop(){ stopThread(); }
+    void threadedFunction();
     void show(){ appear = true; }
     void hide(){ appear = false; }
     void showToggle(){ appear = !appear; }
     void updateTempo(int bpm){ setTempo(bpm); }
-    void update(ofEventArgs &event);
     void render(ofEventArgs &event);
-    bool getBang()const{ return bang; }
+    void sendBang(bool &b);
 };
