@@ -43,7 +43,7 @@ public:
     ofEvent<int>beat;
     
     explicit ofxSimpleMetronome();
-    virtual~ofxSimpleMetronome();
+    virtual ~ofxSimpleMetronome();
     
     void setup(int bpm , float numerators = 4, float denominator = 4);
     void setPosition(float x, float y);

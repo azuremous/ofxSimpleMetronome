@@ -33,7 +33,7 @@
     updateTempo(bpm, numerators, denominator);
     
     ofAddListener(ofEvents().draw, this, &ofxSimpleMetronome::render);
-    startThread(true);
+    startThread();
 }
 
 //--------------------------------------------------------------
@@ -95,6 +95,12 @@
 
 //--------------------------------------------------------------
 /*protected */void ofxSimpleMetronome::updateColor(){
+    if(count==1){
+        bangColor = ofColor(0,0,255);
+    }else{
+        bangColor = ofColor(255,255,0);
+    }
+    
     if (bang) {
         leftCircleColor = bangColor;
         rightCircleColor = grayColor;
